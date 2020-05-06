@@ -5,18 +5,11 @@
 #
 
 # Pull base image
-FROM openjdk:11.0.1
+FROM openjdk:14.0.1-jdk-slim
 
 # Env variables
-ENV SCALA_VERSION 2.12.10
-ENV SBT_VERSION 1.3.3
-
-# Install Scala
-## Piping curl directly in tar
-RUN \
-  curl -fsL https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz | tar xfz - -C /root/ && \
-  echo >> /root/.bashrc && \
-  echo "export PATH=~/scala-$SCALA_VERSION/bin:$PATH" >> /root/.bashrc
+ENV SCALA_VERSION 2.13.2
+ENV SBT_VERSION 1.3.10
 
 # Install sbt
 RUN \
@@ -39,6 +32,13 @@ RUN \
   echo "case object Temp" > Temp.scala && \
   sbt compile && \
   rm -r project && rm build.sbt && rm Temp.scala && rm -r target
+
+# Install Scala
+## Piping curl directly in tar
+RUN \
+  curl -fsL https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz | tar xfz - -C /root/ && \
+  echo >> /root/.bashrc && \
+  echo "export PATH=~/scala-$SCALA_VERSION/bin:$PATH" >> /root/.bashrc
 
 # Define working directory
 WORKDIR /root
